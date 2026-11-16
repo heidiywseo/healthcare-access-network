@@ -1,0 +1,14 @@
+                          scenario     demand  assigned  coverage  expected_completed  completed_per_demand  expected_attendance_among_assigned  available_capacity  feasible_edges
+      insurance_capacity_wait_odds 92371.7143   32078.0  0.347271          28364.1425              0.307065                            0.884224             32078.0             436
+max_min_insurance_transport_equity 92371.7143   32078.0  0.347271          28364.1425              0.307065                            0.884224             32078.0             436
+               capacity_plus_20pct 92371.7143   38493.6  0.416725          34036.9710              0.368478                            0.884224             38493.6             436
+            uninsured_accepted_all 92371.7143   32078.0  0.347271          28364.1425              0.307065                            0.884224             32078.0             520
+            capacity_and_uninsured 92371.7143   38493.6  0.416725          34036.9710              0.368478                            0.884224             38493.6             520
+        wait_piecewise_sensitivity 92371.7143   32078.0  0.347271          23096.7003              0.250041                            0.720017             32078.0             436
+
+max-min coverage: 0.3472708095390364 
+Availability scenarios:
+  availability_probability_scenario  mean_assigned  sd_assigned  p05_assigned  p95_assigned  mean_completed  mean_active_providers
+                              0.50     16042.3250  2392.641699      12537.55      19745.90    14180.683340                38.0750
+                              0.75     23698.7750  2277.799910      19750.05      27108.55    20956.356451                57.1250
+                              0.90     28831.7125  1255.996868      26315.10      30714.45    25495.634570                69.0375

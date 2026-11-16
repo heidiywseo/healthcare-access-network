@@ -1,0 +1,43 @@
+{
+  "created": "2026-11-15T14:05:50",
+  "router": "R5 via r5py 1.1.7",
+  "osm_file": "philadelphia.osm.pbf",
+  "gtfs_files": [
+    "google_bus.zip",
+    "google_rail.zip"
+  ],
+  "departure": "2026-11-17T07:00:00",
+  "departure_window_hours": 2.0,
+  "transit_windows": [
+    {
+      "key": "am",
+      "column": "transit_am_min",
+      "departure": "2026-11-17T07:00:00",
+      "label": "Weekday 7 AM \u2013 9 AM"
+    },
+    {
+      "key": "midday",
+      "column": "transit_midday_min",
+      "departure": "2026-11-17T11:00:00",
+      "label": "Weekday 11 AM \u2013 1 PM"
+    },
+    {
+      "key": "evening",
+      "column": "transit_evening_min",
+      "departure": "2026-11-17T17:00:00",
+      "label": "Weekday 5 PM \u2013 7 PM"
+    }
+  ],
+  "default_transit_window": "am",
+  "transit_statistic": "median travel time over departures every minute in the window",
+  "transit_modes": "all GTFS transit modes + walking (access, egress, transfers); walk-only used if faster",
+  "drive_modes": "car on OSM road network, free-flow speeds (no congestion)",
+  "max_minutes": 180,
+  "origins": "Census 2024 Gazetteer tract internal points (data/tract_representative_points.csv)",
+  "missing_provider_pairs": {
+    "drive_min": 0,
+    "transit_am_min": 0,
+    "transit_midday_min": 0,
+    "transit_evening_min": 0
+  }
+}

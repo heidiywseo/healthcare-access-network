@@ -1,0 +1,10 @@
+scenario,travel_mode,demand,assigned,completed,coverage,attendance,min_group_coverage,capacity,feasible_candidate_edges
+Baseline (network travel times),network,55034.04,32078.0,27047.04,0.58288,0.84316,0.05119,32078.0,31621
+Equity objective,network,55034.04,32078.0,26475.46,0.58288,0.82535,0.58287,32078.0,31621
+Capacity +20%,network,55034.04,38493.6,32218.54,0.69945,0.83698,0.11972,38493.6,31621
+Uninsured eligibility everywhere,network,55034.04,32078.0,27060.46,0.58288,0.84358,0.08443,32078.0,32070
+Wait piecewise,network,55034.04,32078.0,22028.63,0.58288,0.68672,0.05119,32078.0,31621
+"New site West Philadelphia (500 slots; Medicaid+Uninsured; 14-day wait; 39.955,-75.235)",network,55034.04,32578.0,27487.79,0.59196,0.84375,0.06557,32578.0,31592
+Stricter limits (30 min drive / 45 min transit),network,55034.04,32078.0,27047.04,0.58288,0.84316,0.05516,32078.0,30780
+Straight-line proxy instead of network (old method),illustrative,55034.04,32078.0,25185.28,0.58288,0.78513,0.05456,32078.0,31662
+Travel constraints off,none,55034.04,32078.0,28364.14,0.58288,0.88422,0.31995,32078.0,108564

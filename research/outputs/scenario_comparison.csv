@@ -1,0 +1,7 @@
+scenario,demand,assigned,coverage,expected_completed,completed_per_demand,expected_attendance_among_assigned,available_capacity,feasible_edges
+insurance_capacity_wait_odds,92371.7143,32078.0,0.347271,28364.1425,0.307065,0.884224,32078.0,436
+max_min_insurance_transport_equity,92371.7143,32078.0,0.347271,28364.1425,0.307065,0.884224,32078.0,436
+capacity_plus_20pct,92371.7143,38493.6,0.416725,34036.971,0.368478,0.884224,38493.6,436
+uninsured_accepted_all,92371.7143,32078.0,0.347271,28364.1425,0.307065,0.884224,32078.0,520
+capacity_and_uninsured,92371.7143,38493.6,0.416725,34036.971,0.368478,0.884224,38493.6,520
+wait_piecewise_sensitivity,92371.7143,32078.0,0.347271,23096.7003,0.250041,0.720017,32078.0,436

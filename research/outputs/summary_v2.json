@@ -1,0 +1,151 @@
+{
+  "input_rows": {
+    "cohorts": 9384,
+    "providers": 77,
+    "insurance_transport_groups": 8
+  },
+  "demand_annual": 92371.714290009,
+  "capacity_annual": 32078.0,
+  "baseline": {
+    "scenario": "insurance_capacity_wait_odds",
+    "demand": 92371.7143,
+    "assigned": 32078.0,
+    "coverage": 0.347271,
+    "expected_completed": 28364.1425,
+    "completed_per_demand": 0.307065,
+    "expected_attendance_among_assigned": 0.884224,
+    "available_capacity": 32078.0,
+    "feasible_edges": 436
+  },
+  "max_min_insurance_transport_coverage": 0.3472708095390364,
+  "equity": {
+    "scenario": "max_min_insurance_transport_equity",
+    "demand": 92371.7143,
+    "assigned": 32078.0,
+    "coverage": 0.347271,
+    "expected_completed": 28364.1425,
+    "completed_per_demand": 0.307065,
+    "expected_attendance_among_assigned": 0.884224,
+    "available_capacity": 32078.0,
+    "feasible_edges": 436
+  },
+  "scenarios": [
+    {
+      "scenario": "insurance_capacity_wait_odds",
+      "demand": 92371.7143,
+      "assigned": 32078.0,
+      "coverage": 0.347271,
+      "expected_completed": 28364.1425,
+      "completed_per_demand": 0.307065,
+      "expected_attendance_among_assigned": 0.884224,
+      "available_capacity": 32078.0,
+      "feasible_edges": 436
+    },
+    {
+      "scenario": "max_min_insurance_transport_equity",
+      "demand": 92371.7143,
+      "assigned": 32078.0,
+      "coverage": 0.347271,
+      "expected_completed": 28364.1425,
+      "completed_per_demand": 0.307065,
+      "expected_attendance_among_assigned": 0.884224,
+      "available_capacity": 32078.0,
+      "feasible_edges": 436
+    },
+    {
+      "scenario": "capacity_plus_20pct",
+      "demand": 92371.7143,
+      "assigned": 38493.6,
+      "coverage": 0.416725,
+      "expected_completed": 34036.971,
+      "completed_per_demand": 0.368478,
+      "expected_attendance_among_assigned": 0.884224,
+      "available_capacity": 38493.6,
+      "feasible_edges": 436
+    },
+    {
+      "scenario": "uninsured_accepted_all",
+      "demand": 92371.7143,
+      "assigned": 32078.0,
+      "coverage": 0.347271,
+      "expected_completed": 28364.1425,
+      "completed_per_demand": 0.307065,
+      "expected_attendance_among_assigned": 0.884224,
+      "available_capacity": 32078.0,
+      "feasible_edges": 520
+    },
+    {
+      "scenario": "capacity_and_uninsured",
+      "demand": 92371.7143,
+      "assigned": 38493.6,
+      "coverage": 0.416725,
+      "expected_completed": 34036.971,
+      "completed_per_demand": 0.368478,
+      "expected_attendance_among_assigned": 0.884224,
+      "available_capacity": 38493.6,
+      "feasible_edges": 520
+    },
+    {
+      "scenario": "wait_piecewise_sensitivity",
+      "demand": 92371.7143,
+      "assigned": 32078.0,
+      "coverage": 0.347271,
+      "expected_completed": 23096.7003,
+      "completed_per_demand": 0.250041,
+      "expected_attendance_among_assigned": 0.720017,
+      "available_capacity": 32078.0,
+      "feasible_edges": 436
+    }
+  ],
+  "availability_sensitivity": [
+    {
+      "availability_probability_scenario": 0.5,
+      "mean_assigned": 16042.325,
+      "sd_assigned": 2392.641698646345,
+      "p05_assigned": 12537.55,
+      "p95_assigned": 19745.9,
+      "mean_completed": 14180.683339919928,
+      "mean_active_providers": 38.075
+    },
+    {
+      "availability_probability_scenario": 0.75,
+      "mean_assigned": 23698.775,
+      "sd_assigned": 2277.7999099453045,
+      "p05_assigned": 19750.05,
+      "p95_assigned": 27108.55,
+      "mean_completed": 20956.356450503667,
+      "mean_active_providers": 57.125
+    },
+    {
+      "availability_probability_scenario": 0.9,
+      "mean_assigned": 28831.7125,
+      "sd_assigned": 1255.9968676264054,
+      "p05_assigned": 26315.1,
+      "p95_assigned": 30714.45,
+      "mean_completed": 25495.634569802864,
+      "mean_active_providers": 69.0375
+    }
+  ],
+  "model_assumptions": {
+    "reference_wait_days": 7,
+    "reference_attendance_probability": 0.91,
+    "weekly_wait_attendance_odds_ratio": 0.95,
+    "travel_half_life_minutes_assumed": 60.0,
+    "provider_availability_scenario_probabilities": [
+      0.5,
+      0.75,
+      0.9
+    ],
+    "availability_replicates_per_probability": 80,
+    "seed": 20261111
+  },
+  "warnings": [
+    "Synthetic cohort demand and provider insurance/capacity/wait assumptions are not observed Philadelphia access.",
+    "All cohort coordinates are fictional. Travel scenarios are NOT geographic evidence.",
+    "Completion estimates are modeled expectations using external observational associations and assumed baselines; not predictions or causal effects.",
+    "Insurance groups are broad mutually exclusive synthetic categories, not actual plan networks.",
+    "77 selected directory records are not the full city provider supply.",
+    "Waits do not respond endogenously to congestion.",
+    "Max-min equity defined over synthetic insurance categories only; no individual fairness or clinical suitability inference."
+  ]
+}
