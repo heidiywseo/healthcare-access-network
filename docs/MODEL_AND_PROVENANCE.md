@@ -1,6 +1,6 @@
 # Healthcare Access Simulator (v4, formerly AccessLab) — Model, sources, implementation, and audit trail
 
-**Date:** 11 November 2026 (geography and travel sections updated 15 November 2026). **Purpose:** class proof-of-concept for outpatient adult mental healthcare network access in Philadelphia. **Not** an empirical estimate of unmet treatment needs, provider availability, travel time, or intervention impact.
+**Date:** 11 November 2026 (geography and travel sections updated 15 November 2026; research-informed options added 18 November 2026). **Purpose:** class proof-of-concept for outpatient adult mental healthcare network access in Philadelphia. **Not** an empirical estimate of unmet treatment needs, provider availability, travel time, or intervention impact.
 
 ## Source inputs
 
@@ -22,11 +22,15 @@ For cohort `i` with annual modeled demand `D_i` and provider `j` with modeled an
 
 - **Wang et al. (2023)**: behavioral health referral study, 1,587 referrals; 5% lower **odds** of attendance per additional week of waiting. Primary model uses `logit(p_wait,j) = logit(0.91) + ((wait_days_j - 7)/7) × ln(0.95)`. The 0.91 reference at seven days is an illustrative extrapolation from the no-show observation in **Zhang et al. (2020)**, not a jointly fitted model. DOI https://doi.org/10.1037/ser0000768 ; PMID https://pubmed.ncbi.nlm.nih.gov/37141046/ .
 - **Zhang et al. (2020)**: outpatient resident psychiatry clinic with observed 9.0% no-show at one week, 28.6% at one month, 36% at three months. Alternative model interpolates **log-odds of attendance** between `(7 days, .91)`, `(30 days, .714)`, `(90 days, .64)`; outside those anchors it is constant. This is a sensitivity function, not a calibrated Philadelphia estimate. https://pubmed.ncbi.nlm.nih.gov/32692133/ .
-- **Travel:** `p_ij = p_wait,j × exp(-ln(2) × minutes_ij / 60)`. By default `minutes_ij` is the R5 network travel time (driving for vehicle cohorts, SEPTA transit for no-vehicle cohorts; see `docs/GEOGRAPHY.md`); the old straight-line proxy remains available as `travel_mode='illustrative'`. The 60-minute travel half-life is **assumed**, not estimated from published travel findings.
+- **Travel:** `p_ij = p_wait,j × exp(-ln(2) × minutes_ij / 60)`. By default `minutes_ij` is the R5 network travel time (driving for vehicle cohorts, SEPTA transit for no-vehicle cohorts; see `docs/GEOGRAPHY.md`); the old straight-line proxy remains available as `travel_mode='illustrative'`. The 60-minute travel half-life is **assumed**, not estimated from published travel findings. Two alternatives can be selected (`travel_decay`): a 30-minute half-life informed by the Finnish utilization study (PMID 36451184), and the research team's piecewise score `T(t)/100` (100 − t to 30 min, then 70 − 3(t − 30), floor 0). See `docs/RESEARCH_INTEGRATION.md`.
 
 ### Equity
 
 An alternative **max–min coverage** objective introduces `z` with constraints `sum_{i in group g,j} x_ij >= z × D_g` for each of the eight insurance × household-vehicle groups. It first maximizes `z` while preserving Stage 1 maximum total assignments, then maximizes expected attendance while holding the optimal `z` to a tolerance of 1e-6. Fairness across these synthetic groups is not a measurement of demographic inequity. Baseline differences may reflect LP tie-breaking.
+
+### Graph methods (added 18 November 2026)
+
+Shadow prices (capacity duals) give the expected completed intakes per extra slot at each provider. A facility-location search (dual-based screening of all study-area tract points, exact re-solves of the best, greedy for several sites) recommends new clinic locations. A per-group maximum flow separates reach limits from competition. Formulation, validation against re-solves and an exhaustive search, and results: `docs/GRAPH_METHODS.md`.
 
 ### Scenario controls
 
@@ -37,6 +41,9 @@ An alternative **max–min coverage** objective introduces `z` with constraints 
 - Travel threshold sliders (driving limit for vehicle cohorts, transit limit for no-vehicle cohorts) alter the feasibility graph and therefore patient assignments. The transit departure time dropdown switches no-vehicle cohorts between the 7–9 AM, 11 AM–1 PM and 5–7 PM weekday transit times.
 - **Patient view (demo).** `Model.patient_options` / `POST /api/patient` ranks every provider for one hypothetical patient: origin = nearest Census tract internal point to the chosen map location; minutes = R5 driving (car) or transit (no car, chosen window) time to each site, with a new map site using its nearest tract's times; a site *matches* if it accepts the patient's insurance and is within the chosen trip limit; *likely to attend* = `p_wait,j × exp(-ln(2) × minutes/60)`, the same assumed factors the optimizer uses. *Booked* is the share of the site's capacity filled in the current scenario's optimized assignment. No optimization is run for the patient, and inputs are not stored. Insurance, capacity and waits are synthetic, so rankings are illustrative.
 - Wait-model selector changes the expected-attendance objective, not static provider wait days or capacity.
+- **Wait cap / provider wait (added 18 Nov 2026).** `max_wait_days` caps every provider's wait (open-access scheduling, Lesaca 2017; 30-day threshold, Pace 2018); `provider_wait_days` sets one selected provider's wait. Effects flow only through the chosen wait model.
+- **Telehealth (added 18 Nov 2026).** `telehealth_share` (0–0.5) moves that share of every provider's slots to video nodes with insurance-only eligibility, no travel limit or multiplier, and attendance odds × 1 (neutral), × 1/0.64 (Pullyblank et al. 2024) or × 0.73 (Bhatta et al. 2023). Evidence is from established, rural patients; treat it as a range.
+- **Group accessibility score (Patient view, added 18 Nov 2026).** `A = I × C × (w·T(t) + (1−w)·W(d))` from the group's notes, with w = 0.6/0.5/0.4; I is the insurance filter, C is treated as 1. A ranking index only, not used by the optimizer.
 
 ## What the UI shows
 
@@ -63,6 +70,12 @@ The `index.html` file embeds an offline baseline snapshot for immediate preview.
 - Wang J et al. (2023), *Association between wait time and behavioral health appointment attendance across patient characteristics*. https://pubmed.ncbi.nlm.nih.gov/37141046/
 - Zhang X et al. (2020), *Twelve-Month Analysis of Nonattendance for Initial Assessment in a Resident Outpatient Psychiatry Clinic*. https://pubmed.ncbi.nlm.nih.gov/32692133/
 - Brahmbhatt D & Schpero WL (2024), *Access to Psychiatric Appointments for Medicaid Enrollees in 4 Large US Cities*. https://jamanetwork.com/journals/jama/fullarticle/2821639 . Motivates directory uncertainty, **not** a fitted provider availability probability in v4.
+- Lesaca T (2017), *The Impact of Queue-Controlled Modified Open Access Scheduling on No-Show Rate in a Community Mental Health Child Psychiatry Med Check Clinic*, Patient Experience Journal 4(1). https://pxjournal.org/journal/vol4/iss1/14/
+- Pace CA et al. (2018), *Warm Handoffs and Attendance at Initial Integrated Behavioral Health Appointments*, Annals of Family Medicine 16(4):346. https://www.annfammed.org/content/16/4/346
+- Finnish mental health service travel-time study (2022). https://pubmed.ncbi.nlm.nih.gov/36451184/
+- Pullyblank K et al. (2024), *Examining Differences in Time to Appointment and No-Show Rates Between Rural Telehealth Users and Non-Users*, Frontiers in Digital Health 6:1264893. https://pmc.ncbi.nlm.nih.gov/articles/PMC10853349/
+- Bhatta S, Sizer M, Acharya B (2023), *Association Between Telehealth and Missed Appointments Among Patients Experiencing Behavioral Health Challenges*, JAMA Network Open 6(7). https://pubmed.ncbi.nlm.nih.gov/37466943/
+- Group research notes (`Notes.pdf`, Nov 2026): the full mapping of each study to the model is in `docs/RESEARCH_INTEGRATION.md`.
 - User-supplied *Final Project Idea* PDF: travel, insurance, telehealth, and no-show studies. See full bibliography in `research/docs/RESEARCH_METHODS.md`.
 - Census Bureau Gazetteer files (tract internal points, 2024): https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.html
 - Census Bureau cartographic boundary files (tract outlines, 2024, 1:500k): https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html

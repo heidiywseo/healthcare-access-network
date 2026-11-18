@@ -24,6 +24,8 @@ Open `AccessLab_Map_Preview.html` in a browser. This is a **read-only interactiv
 - **Left controls:** choose baseline/equity/capacity/uninsured/wait scenarios, adjust travel thresholds, add a clinic by clicking on the map, or select a provider to edit its capacity and insurance flags. Press **Recalculate network**.
 - **Right insights:** provider/tract inspection, outcomes relative to baseline, eight insurance × vehicle-access coverage groups, and methodology links.
 - **Patient view (demo tab, right panel):** set a patient's location on the map, their insurance, whether they have a car, the longest trip they'd accept and (for transit) when they'd travel. The panel lists the matching providers ranked by modeled likelihood of attending, shortest trip or shortest wait, and marks the top five on the map. It uses the same network travel times and the current scenario (added clinic, capacity, insurance changes), with no optimization. **Insurance acceptance, capacity and wait times are synthetic, so this is an illustration, not a directory or availability check.** It needs the server (`/api/patient`); the offline preview shows a notice instead. Nothing entered is stored.
+- **Research-informed options (added 18 Nov 2026):** a travel-effect selector (assumed 60-min half-life, a 30-min half-life informed by the Finnish study, or the group's piecewise T(t)); a wait cap and per-provider wait editing (open-access scheduling); a telehealth share of slots with neutral, better or worse attendance effects; and, in Patient view, the group's accessibility score with 60/40, 50/50 and 40/60 weightings. New presets: *Shorter waits*, *Stronger travel penalty*, *Telehealth for 20% of slots*. The baseline is unchanged. See `docs/RESEARCH_INTEGRATION.md` for how every study in the group's notes is used.
+- **Graph methods (added 18 Nov 2026):** shadow prices show how much one more slot at each provider is worth (Network tab, "Where would more capacity help?", and each provider's card); a facility-location search finds the best tract for a new clinic for either goal (most completed intakes, or the worst-off group), for up to three clinics; a per-group max-flow check reports whether low coverage comes from limited reach or from competition for slots. See `docs/GRAPH_METHODS.md`.
 - **Live backend:** `engine.py` constructs insurance/travel feasible edges and solves two-stage linear programs with SciPy HiGHS. Equity is a max–min coverage LP. The map draws **computed flow values**, not fabricated animation.
 
 ## Geography limitation — read this before presenting
@@ -49,6 +51,10 @@ The model is limited to a **study area**: the smallest circle containing all 77 
 - `docs/MODEL_AND_PROVENANCE.md`: full mathematics, evidence, assumptions, implementation and limitations.
 - `docs/GEOGRAPHY.md`: geographic sources, the study area, what the map can and cannot establish.
 - `docs/VALIDATION.md`: test status and scenario results.
+- `docs/INTERVENTION_ANALYSIS.md`: writeup comparing single and combined interventions, equal-budget strategies, efficiency–equity trade-offs and robustness, validated against research and local data (figures in `docs/figures/`).
+- `analysis/`: `intervention_experiments.py` (all runs, ~15 min, writes `analysis/outputs/intervention_results.csv`) and `make_figures.py`.
+- `docs/GRAPH_METHODS.md`: the network-flow formulation, shadow prices, facility location search and max-flow reach check, with validation.
+- `docs/RESEARCH_INTEGRATION.md`: how each study and proposal in the group research notes is used (encoded, added, context only, or not adopted and why), calibration checks and results.
 - `tests/`: basic reproducibility and solver invariant checks (2 of 7 currently fail on outdated geography assumptions; see `docs/VALIDATION.md`).
 
 **No npm installation is required** to run the new interface. It uses a local Python API and a dependency-free SVG frontend.

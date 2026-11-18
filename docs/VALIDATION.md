@@ -1,6 +1,6 @@
 # Validation and executed example results
 
-**Last run: 15 November 2026**, with real Census tract points and outlines, the default study area (smallest circle containing all 77 providers: 5.36 miles, 249 of 391 tracts), and **network travel times** from R5 (OpenStreetMap driving; SEPTA transit, median over Tue 17 Nov 2026 7–9 AM departures unless noted). See `docs/GEOGRAPHY.md`. Earlier results (synthetic grid coordinates, then the straight-line travel proxy) are superseded.
+**Last run: 15 November 2026** (research-informed options added and checked 18 November 2026), with real Census tract points and outlines, the default study area (smallest circle containing all 77 providers: 5.36 miles, 249 of 391 tracts), and **network travel times** from R5 (OpenStreetMap driving; SEPTA transit, median over Tue 17 Nov 2026 7–9 AM departures unless noted). See `docs/GEOGRAPHY.md`. Earlier results (synthetic grid coordinates, then the straight-line travel proxy) are superseded.
 
 ## Checks
 
@@ -74,6 +74,27 @@ The gap between vehicle and no-vehicle groups is **not** a reachability gap: eve
 | 5–7 PM | 27,047 | 5.0% | 13.0% | 26,469 |
 
 Assigned patients (32,078) and coverage (58.3%) are the same in every window. The 7–9 AM transit times were recomputed alongside the new windows and matched the earlier run exactly. See "Time of day" in `docs/GEOGRAPHY.md`.
+
+### Research-informed options (added 18 November 2026)
+
+| Scenario | Expected completed | Lowest group coverage | Telehealth assignments |
+|---|---:|---:|---:|
+| Travel effect: 30-min half-life | 25,804 | 5.7% | 0 |
+| Travel effect: group T(t) | 27,191 | 5.5% | 0 |
+| Wait cap 30 days | 27,431 | 5.7% | 0 |
+| Wait cap 14 days | 27,705 | 5.7% | 0 |
+| Telehealth 20% (neutral / better / worse) | 27,439 / 27,685 / 27,206 | 19.1% / 18.6% / 19.2% | 6,416 |
+
+Assigned stays 32,078 in all of these runs. The default baseline was re-run after the change and is identical (27,047 expected completed, 5.1% lowest group). The calibration checks against published no-show rates, Medicaid acceptance and wait times are in `docs/RESEARCH_INTEGRATION.md` §4. The checks summarized there: default attendance (84%) is optimistic compared with the published no-show rates; synthetic Medicaid acceptance (80.5%) far exceeds measured rates (35.4%, 17.8%). The new controls, presets and the Patient view score were exercised in headless Chrome with no page errors.
+
+### Graph methods (added 18 November 2026)
+
+- Shadow prices matched re-solving with +1 and +100 slots to within 0.01 for six providers across the value range (+0.69 to +0.88 per slot).
+- The location screen correlated 0.984 with an exhaustive exact search over all 249 candidates and ranked the true best site first; the worst-off-group search found the exhaustive optimum (8.9% lowest-group coverage) with 28 exact solves.
+- Max-flow check: every group is fully reachable at default limits; at 10/20-minute limits no-vehicle groups can reach only 64–83% of their demand.
+- The search, map markers, shading and "add to scenario" were exercised in headless Chrome with no page errors.
+
+Details: `docs/GRAPH_METHODS.md`.
 
 ### Sensitivity to the study area (baseline, straight-line proxy)
 

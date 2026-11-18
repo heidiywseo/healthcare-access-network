@@ -23,6 +23,13 @@ class Scenario(BaseModel):
     transit_window:str|None=None
     vehicle_limit:float=45
     no_vehicle_limit:float=60
+    travel_decay:str='halflife60'
+    max_wait_days:float|None=None
+    provider_wait_days:float|None=None
+    telehealth_share:float=0
+    telehealth_effect:str='neutral'
+    new_providers:list[dict]|None=None
+    capacity_deltas:dict[str,float]|None=None
 
 @app.get('/')
 def index():return FileResponse(ROOT/'index.html')
@@ -46,6 +53,19 @@ class Patient(BaseModel):
 def patient(s:Patient):
     if s.tract is None and (s.latitude is None or s.longitude is None):raise HTTPException(status_code=400,detail='Give a tract or a latitude and longitude')
     try:return model.patient_options(s.scenario.model_dump(),s.model_dump(exclude={'scenario'}))
+    except (ValueError,RuntimeError) as e:raise HTTPException(status_code=400,detail=str(e))
+
+class SiteSearch(BaseModel):
+    scenario:Scenario=Scenario()
+    capacity:float=500
+    wait_days:float=14
+    insurance:list[str]=['Medicaid','Medicare','Private/other','Uninsured']
+    goal:str='completed'
+    count:int=1
+
+@app.post('/api/site_search')
+def site_search(s:SiteSearch):
+    try:return model.site_search(s.scenario.model_dump(),{'capacity':s.capacity,'wait_days':s.wait_days,'insurance':s.insurance},s.goal,s.count)
     except (ValueError,RuntimeError) as e:raise HTTPException(status_code=400,detail=str(e))
 
 app.mount('/assets',StaticFiles(directory=ROOT/'assets'),name='assets')
